@@ -10761,10 +10761,10 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\users\\rivonnguyen\\documents\\visual studio 2017\\Projects\\SimpleBankSystem\\SimpleBankSystem\\SimpleBankSystem.csproj",
+      "projectUniqueName": "C:\\Users\\RivonNguyen\\documents\\visual studio 2017\\Projects\\SimpleBankSystem\\SimpleBankSystem\\SimpleBankSystem.csproj",
       "projectName": "SimpleBankSystem",
-      "projectPath": "c:\\users\\rivonnguyen\\documents\\visual studio 2017\\Projects\\SimpleBankSystem\\SimpleBankSystem\\SimpleBankSystem.csproj",
-      "outputPath": "c:\\users\\rivonnguyen\\documents\\visual studio 2017\\Projects\\SimpleBankSystem\\SimpleBankSystem\\obj\\",
+      "projectPath": "C:\\Users\\RivonNguyen\\documents\\visual studio 2017\\Projects\\SimpleBankSystem\\SimpleBankSystem\\SimpleBankSystem.csproj",
+      "outputPath": "C:\\Users\\RivonNguyen\\documents\\visual studio 2017\\Projects\\SimpleBankSystem\\SimpleBankSystem\\obj\\",
       "projectStyle": "PackageReference",
       "originalTargetFrameworks": [
         "netcoreapp1.1"
