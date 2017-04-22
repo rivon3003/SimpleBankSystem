@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using SimpleBankSystem.Data;
 using SimpleBankSystem.Repository.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -11,16 +13,17 @@ namespace SimpleBankSystem.Repository.Implementation
         where TUnitOfWork : UnitOfWork
         where TDbContext : DbContext
     {
-        readonly string connectionStringName;
+        private SbsContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UnitOfWorkFactory(string connectionStringName)
+        public UnitOfWorkFactory(SbsContext context, IHttpContextAccessor httpContextAccessor)
         {
-            this.connectionStringName = connectionStringName;
+            _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
         public virtual TUnitOfWork Create()
         {
-            var ctx = Activator.CreateInstance(typeof(TDbContext), connectionStringName) as TDbContext;
-            return Activator.CreateInstance(typeof(TUnitOfWork), ctx) as TUnitOfWork;
+            return Activator.CreateInstance(typeof(TUnitOfWork), _context, _httpContextAccessor) as TUnitOfWork;
         }
     }
 }

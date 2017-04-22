@@ -19,13 +19,12 @@ namespace SimpleBankSystem.Repository.Implementation
         private readonly Dictionary<Type, IGenericRepository> cachedRepositories = new Dictionary<Type, IGenericRepository>();
         private bool diposed = false;
 
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private ISession _session => _httpContextAccessor.HttpContext.Session;
+        private ISession _session;
 
         public UnitOfWork(SbsContext dbContext, IHttpContextAccessor httpContextAccessor)
         {
             this.dbContext = dbContext;
-            _httpContextAccessor = httpContextAccessor;
+            _session = httpContextAccessor.HttpContext.Session;
         }
 
         public IGenericRepository<TEntity> Repository<TEntity>() where TEntity : class
@@ -81,14 +80,20 @@ namespace SimpleBankSystem.Repository.Implementation
                 var currentDateTime = DateTime.Now;
                 Type type;
 
-                string currentAccount = _session.GetObjectFromJson<Account>(SessionName.CurrentUserName).AccountName.ToString();
+                //TODO: Remove when Login function completed
+                string currentAccount = "N/A";
+                if (_session.GetObjectFromJson<Account>(SessionName.CurrentUserName) != null)
+                {
+                    currentAccount = _session.GetObjectFromJson<Account>(SessionName.CurrentUserName).AccountName.ToString();
+                }
+                
                 var changes = changeSet.Where(c => c.State != EntityState.Unchanged && c.State != EntityState.Deleted);
                 foreach (var entry in changes)
                 {
                     type = entry.Entity.GetType();
                     if (type.GetProperty("Id") != null)
                     {
-                        entry.State = (int)type.GetProperty("Id").GetValue(entry.Entity, null) == 0
+                        entry.State = (int)type.GetProperty("Id").GetValue(entry.Entity, null) == -2147482647
                             ? EntityState.Added : EntityState.Modified;
                     }
                     var updAtPr = type.GetProperty(Property.UpdatedDate);

@@ -1,12 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+
+using SimpleBankSystem.Data;
+using SimpleBankSystem.Repository.Implementation;
+using SimpleBankSystem.Repository.Infrastructure;
+using SimpleBankSystem.Services.Implementation;
+using SimpleBankSystem.Services.Infrastructure;
+
+
+
 
 namespace SimpleBankSystem
 {
@@ -29,6 +36,21 @@ namespace SimpleBankSystem
         {
             // Add framework services.
             services.AddMvc();
+            services.AddAutoMapper();
+            services.AddSession();
+            try
+            {
+                services.AddDbContext<SbsContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+            
+
+            services.AddTransient<IAccountService, AccountService>();
+            services.AddTransient<IUnitOfWorkFactory<IUnitOfWork>, UnitOfWorkFactory<UnitOfWork, SbsContext>>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +70,7 @@ namespace SimpleBankSystem
             }
 
             app.UseStaticFiles();
+            app.UseSession();
 
             app.UseMvc(routes =>
             {

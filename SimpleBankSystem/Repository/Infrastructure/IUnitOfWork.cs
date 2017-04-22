@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SimpleBankSystem.Repository.Infrastructure
 {
-    interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork : IDisposable
     {
         IGenericRepository<TEntity> Repository<TEntity>() where TEntity : class;
         void Save();

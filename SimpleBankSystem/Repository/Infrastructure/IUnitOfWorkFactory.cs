@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SimpleBankSystem.Repository.Infrastructure
 {
-    interface IUnitOfWorkFactory<out TUnitOfWork> where TUnitOfWork : IUnitOfWork
+    public interface IUnitOfWorkFactory<out TUnitOfWork> where TUnitOfWork : IUnitOfWork
     {
         TUnitOfWork Create();
     }
