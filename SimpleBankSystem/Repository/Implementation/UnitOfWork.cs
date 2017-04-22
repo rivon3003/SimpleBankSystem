@@ -10,6 +10,7 @@ using SimpleBankSystem.Constants.Web;
 using System.Reflection;
 using SimpleBankSystem.Extension;
 using SimpleBankSystem.Constants.TrackingData;
+using SimpleBankSystem.Constants.Value;
 
 namespace SimpleBankSystem.Repository.Implementation
 {
@@ -81,7 +82,7 @@ namespace SimpleBankSystem.Repository.Implementation
                 Type type;
 
                 //TODO: Remove when Login function completed
-                string currentAccount = "N/A";
+                string currentAccount = Common.NotAvailable;
                 if (_session.GetObjectFromJson<Account>(SessionName.CurrentUserName) != null)
                 {
                     currentAccount = _session.GetObjectFromJson<Account>(SessionName.CurrentUserName).AccountName.ToString();
@@ -91,9 +92,9 @@ namespace SimpleBankSystem.Repository.Implementation
                 foreach (var entry in changes)
                 {
                     type = entry.Entity.GetType();
-                    if (type.GetProperty("Id") != null)
+                    if (type.GetProperty(Property.Id) != null)
                     {
-                        entry.State = (int)type.GetProperty("Id").GetValue(entry.Entity, null) == -2147482647
+                        entry.State = (int)type.GetProperty(Property.Id).GetValue(entry.Entity, null) < 0
                             ? EntityState.Added : EntityState.Modified;
                     }
                     var updAtPr = type.GetProperty(Property.UpdatedDate);

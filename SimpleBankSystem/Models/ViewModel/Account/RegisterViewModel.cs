@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using SimpleBankSystem.Constants.Web;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace SimpleBankSystem.Models.ViewModel.Account
 {
@@ -9,6 +12,7 @@ namespace SimpleBankSystem.Models.ViewModel.Account
         [RegularExpression(@"^[0-9]{4}$")]
         [Display(Name = "Account Number")]
         [DisplayFormat(DataFormatString = "{0:#### #### #### ####}")]
+        [Remote("CheckAccNumValid", "Account")]
         public string AccountNumber { get; set; }
 
         [Required(AllowEmptyStrings = false)]

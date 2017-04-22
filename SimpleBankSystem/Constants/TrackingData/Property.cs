@@ -11,5 +11,6 @@ namespace SimpleBankSystem.Constants.TrackingData
         public static string CreatedBy = "CreatedBy";
         public static string UpdatedDate = "UpdatedDate";
         public static string UpdatedBy = "UpdatedBy";
+        public static string Id = "Id";
     }
 }

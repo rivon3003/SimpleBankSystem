@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SimpleBankSystem.Models.ViewModel.Account;
 using SimpleBankSystem.Services.Infrastructure;
+using SimpleBankSystem.Constants.Web;
+using SimpleBankSystem.Constants.Value;
 
 namespace SimpleBankSystem.Controllers
 {
@@ -44,6 +46,12 @@ namespace SimpleBankSystem.Controllers
                 _accSer.CreateAccount(model);
             }
             return View();
+        }
+
+        public JsonResult CheckAccNumValid(string accountNumber)
+        {
+            var result = _accSer.IsAccNumExisted(accountNumber) ? String.Format(Message.AlreadInUse, accountNumber) : Common.TrueStrValJavascriptMatching;
+            return Json(result);
         }
     }
 }

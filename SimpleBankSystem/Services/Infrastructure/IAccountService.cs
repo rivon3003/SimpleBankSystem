@@ -10,5 +10,6 @@ namespace SimpleBankSystem.Services.Infrastructure
     public interface IAccountService
     {
         void CreateAccount(RegisterViewModel account);
+        bool IsAccNumExisted(string accNum);
     }
 }

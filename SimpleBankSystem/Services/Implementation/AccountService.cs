@@ -34,5 +34,13 @@ namespace SimpleBankSystem.Services.Implementation
                 unit.Save();
             }
         }
+
+        public bool IsAccNumExisted(string accNum)
+        {
+            using (var unit = _unitOfWorkFactory.Create())
+            {
+                return unit.Repository<Account>().Get().Any(a => a.AccountNumber == accNum);
+            }
+        }
     }
 }
