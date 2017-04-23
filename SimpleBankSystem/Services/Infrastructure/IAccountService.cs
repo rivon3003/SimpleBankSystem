@@ -11,5 +11,6 @@ namespace SimpleBankSystem.Services.Infrastructure
     {
         void CreateAccount(RegisterViewModel account);
         bool IsAccNumExisted(string accNum);
+        bool IsValidAccount(LoginViewModel model);
     }
 }

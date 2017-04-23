@@ -42,5 +42,13 @@ namespace SimpleBankSystem.Services.Implementation
                 return unit.Repository<Account>().Get().Any(a => a.AccountNumber == accNum);
             }
         }
+
+        public bool IsValidAccount(LoginViewModel model)
+        {
+            using (var unit = _unitOfWorkFactory.Create())
+            {
+                return unit.Repository<Account>().Get().Any(a => a.AccountNumber == model.AccountNumber && a.Password == model.Password);
+            }
+        }
     }
 }

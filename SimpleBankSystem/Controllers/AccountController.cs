@@ -7,6 +7,8 @@ using SimpleBankSystem.Models.ViewModel.Account;
 using SimpleBankSystem.Services.Infrastructure;
 using SimpleBankSystem.Constants.Web;
 using SimpleBankSystem.Constants.Value;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SimpleBankSystem.Controllers
 {
@@ -22,6 +24,21 @@ namespace SimpleBankSystem.Controllers
         }
 
         #endregion Contructor and Properties
+
+        #region Private method
+        private IActionResult RedirectToLocal(string returnUrl)
+        {
+            if (Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            else
+            {
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+            }
+        }
+        #endregion Private method
+
         public IActionResult Index()
         {
             return View();
@@ -29,6 +46,21 @@ namespace SimpleBankSystem.Controllers
 
         public IActionResult Login()
         {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public IActionResult Login(LoginViewModel model, string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            if (_accSer.IsValidAccount(model))
+            {
+                return RedirectToAction("Index");
+            }
+
+            ModelState.AddModelError("InvalidAccount", "Account is invalid");
             return View();
         }
 
@@ -42,11 +74,13 @@ namespace SimpleBankSystem.Controllers
         {
             if(ModelState.IsValid)
             {
-
                 _accSer.CreateAccount(model);
+                return RedirectToAction("Index");
             }
             return View();
         }
+
+
 
         public JsonResult CheckAccNumValid(string accountNumber)
         {

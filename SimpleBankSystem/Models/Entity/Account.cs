@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace SimpleBankSystem.Models.Entity
 {
-    public class Account
+    public class Account : BaseEntity
     {
         public int Id { get; set; }
         public string AccountNumber { get; set; }
         public string AccountName { get; set; }
         public string Password { get; set; }
         public decimal Balance { get; set; }
-        public DateTime CreatedDate { get; set; }
+        
     }
 }
