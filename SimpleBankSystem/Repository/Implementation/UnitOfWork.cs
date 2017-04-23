@@ -11,6 +11,7 @@ using System.Reflection;
 using SimpleBankSystem.Extension;
 using SimpleBankSystem.Constants.TrackingData;
 using SimpleBankSystem.Constants.Value;
+using SimpleBankSystem.Models.ViewModel.Account;
 
 namespace SimpleBankSystem.Repository.Implementation
 {
@@ -83,9 +84,9 @@ namespace SimpleBankSystem.Repository.Implementation
 
                 //TODO: Remove when Login function completed
                 string currentAccount = Common.NotAvailable;
-                if (_session.GetObjectFromJson<Account>(SessionName.CurrentUserName) != null)
+                if (_session.GetObjectFromJson<Account>(SessionName.LoggedAccount) != null)
                 {
-                    currentAccount = _session.GetObjectFromJson<Account>(SessionName.CurrentUserName).AccountName.ToString();
+                    currentAccount = _session.GetObjectFromJson<LoginViewModel>(SessionName.LoggedAccount).AccountNumber.ToString();
                 }
                 
                 var changes = changeSet.Where(c => c.State != EntityState.Unchanged && c.State != EntityState.Deleted);

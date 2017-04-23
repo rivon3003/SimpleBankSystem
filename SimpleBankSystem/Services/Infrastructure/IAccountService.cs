@@ -1,4 +1,5 @@
 ﻿using SimpleBankSystem.Models.Entity;
+using SimpleBankSystem.Models.ResponseModel.Account;
 using SimpleBankSystem.Models.ViewModel.Account;
 using System;
 using System.Collections.Generic;
@@ -12,5 +13,9 @@ namespace SimpleBankSystem.Services.Infrastructure
         void CreateAccount(RegisterViewModel account);
         bool IsAccNumExisted(string accNum);
         bool IsValidAccount(LoginViewModel model);
+        DetailViewModel GetAccountDetail(string accNum);
+        TransactionResponseModel Deposit(DepositViewModel model);
+        TransactionResponseModel Withdraw(WithdrawViewModel model);
+        TransactionResponseModel Transfer(TransferViewModel model);
     }
 }

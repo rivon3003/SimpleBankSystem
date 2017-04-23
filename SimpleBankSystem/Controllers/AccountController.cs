@@ -9,6 +9,9 @@ using SimpleBankSystem.Constants.Web;
 using SimpleBankSystem.Constants.Value;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using SimpleBankSystem.Extension;
+using SimpleBankSystem.Filter;
 
 namespace SimpleBankSystem.Controllers
 {
@@ -26,19 +29,10 @@ namespace SimpleBankSystem.Controllers
         #endregion Contructor and Properties
 
         #region Private method
-        private IActionResult RedirectToLocal(string returnUrl)
-        {
-            if (Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-            else
-            {
-                return RedirectToAction(nameof(HomeController.Index), "Home");
-            }
-        }
+
         #endregion Private method
 
+        [LogInRequired]
         public IActionResult Index()
         {
             return View();
@@ -49,18 +43,24 @@ namespace SimpleBankSystem.Controllers
             return View();
         }
 
+        public IActionResult LogOut()
+        {
+            HttpContext.Session.SetObjectAsJson(SessionName.LoggedAccount, null);
+            return RedirectToAction("Login");
+        }
+
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public IActionResult Login(LoginViewModel model, string returnUrl = null)
+        public IActionResult Login(LoginViewModel model)
         {
-            ViewData["ReturnUrl"] = returnUrl;
             if (_accSer.IsValidAccount(model))
             {
-                return RedirectToAction("Index");
+                HttpContext.Session.SetObjectAsJson(SessionName.LoggedAccount, new LoginViewModel { AccountNumber = model.AccountNumber });
+                return RedirectToAction("Detail");
             }
 
-            ModelState.AddModelError("InvalidAccount", "Account is invalid");
+            ModelState.AddModelError(ErrorList.InvalidAccount.Key, ErrorList.InvalidAccount.Message);
             return View();
         }
 
@@ -74,18 +74,50 @@ namespace SimpleBankSystem.Controllers
         {
             if(ModelState.IsValid)
             {
+                HttpContext.Session.SetObjectAsJson(SessionName.LoggedAccount, new LoginViewModel { AccountNumber = model.AccountNumber });
                 _accSer.CreateAccount(model);
-                return RedirectToAction("Index");
+                return RedirectToAction("Detail");
             }
             return View();
         }
 
-
-
+        [LogInRequired]
         public JsonResult CheckAccNumValid(string accountNumber)
         {
             var result = _accSer.IsAccNumExisted(accountNumber) ? String.Format(Message.AlreadInUse, accountNumber) : Common.TrueStrValJavascriptMatching;
             return Json(result);
+        }
+
+        [LogInRequired]
+        public IActionResult Detail()
+        {
+            var curAccNum = HttpContext.Session.GetObjectFromJson<LoginViewModel>(SessionName.LoggedAccount).AccountNumber;
+            var model = _accSer.GetAccountDetail(curAccNum);
+            return View(model);
+        }
+
+        [HttpPost]
+        [LogInRequired]
+        public JsonResult Deposit([FromBody] DepositViewModel model)
+        {
+            model.AccountNumber = HttpContext.Session.GetObjectFromJson<LoginViewModel>(SessionName.LoggedAccount).AccountNumber;
+            return Json(_accSer.Deposit(model));
+        }
+
+        [HttpPost]
+        [LogInRequired]
+        public JsonResult Withdraw([FromBody] WithdrawViewModel model)
+        {
+            model.AccountNumber = HttpContext.Session.GetObjectFromJson<LoginViewModel>(SessionName.LoggedAccount).AccountNumber;
+            return Json(_accSer.Withdraw(model));
+        }
+
+        [HttpPost]
+        [LogInRequired]
+        public JsonResult Transfer([FromBody] TransferViewModel model)
+        {
+            model.AccountNumber = HttpContext.Session.GetObjectFromJson<LoginViewModel>(SessionName.LoggedAccount).AccountNumber;
+            return Json(_accSer.Transfer(model));
         }
     }
 }

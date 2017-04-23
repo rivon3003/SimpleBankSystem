@@ -7,6 +7,6 @@ namespace SimpleBankSystem.Constants.Web
 {
     public static class SessionName
     {
-        public static string CurrentUserName = "CurrentUserName";
+        public static string LoggedAccount = "LoggedAccount";
     }
 }
