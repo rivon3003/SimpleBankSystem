@@ -8,9 +8,10 @@ using SimpleBankSystem.Data;
 namespace SimpleBankSystem.Migrations
 {
     [DbContext(typeof(SbsContext))]
-    partial class SbsContextModelSnapshot : ModelSnapshot
+    [Migration("20170502120326_RowVersionColumn")]
+    partial class RowVersionColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")

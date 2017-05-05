@@ -4,7 +4,8 @@
         contentType: "application/json",
         url: "/Account/Deposit",
         data: JSON.stringify({
-            Amount: $("#depositAmount").val()
+            Amount: $("#depositAmount").val(),
+            RowVersion: $("#rowVersion").val()
         }),
         dataType: "JSON",
         success: function (response)

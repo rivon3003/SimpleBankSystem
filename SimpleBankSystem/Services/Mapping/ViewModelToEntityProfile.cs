@@ -12,7 +12,7 @@ namespace SimpleBankSystem.Mapping
     {
         public ViewModelToEntityProfile()
         {
-            CreateMap<RegisterViewModel, Account>();
+            CreateMap<RegisterViewModel, Account>().ForMember(dest => dest.RowVersion, opts => opts.MapFrom(src => Convert.FromBase64String(src.RowVersion)));
         }
     }
 }

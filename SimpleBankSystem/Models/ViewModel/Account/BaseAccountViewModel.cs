@@ -11,5 +11,7 @@ namespace SimpleBankSystem.Models.ViewModel.Account
         [DisplayFormat(DataFormatString = "{0:#### #### #### ####}")]
         [Remote("CheckAccNumValid", "Account")]
         public string AccountNumber { get; set; }
+
+        public string RowVersion { get; set; }
     }
 }
