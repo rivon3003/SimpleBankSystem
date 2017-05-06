@@ -16,5 +16,6 @@ namespace SimpleBankSystem.Constants.Web
         public static string ErrorWithWithdrawTransaction = "Error occurs in withdraw process.";
         public static string RedundantTransaction = "Target account is the current acount. it is a redundant transaction.";
         public static string NoFound = "Data is not found";
+        public static string AccountNotFound = "The account is not found";
     }
 }

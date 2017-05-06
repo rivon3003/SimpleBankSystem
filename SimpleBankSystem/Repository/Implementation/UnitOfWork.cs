@@ -15,6 +15,7 @@ using SimpleBankSystem.Models.ViewModel.Account;
 using System.Threading.Tasks;
 using SimpleBankSystem.Models.ResponseModel.Account;
 using SimpleBankSystem.Models.Result;
+using RepoCons = SimpleBankSystem.Constants.Repository;
 
 namespace SimpleBankSystem.Repository.Implementation
 {
@@ -62,7 +63,7 @@ namespace SimpleBankSystem.Repository.Implementation
                 return new SaveResultModel
                 {
                     IsSuccessful = true,
-                    Message = "Saved",
+                    Message = RepoCons.Message.SaveSuccessful
                 };
             }
             catch(DbUpdateConcurrencyException ex)
@@ -70,7 +71,7 @@ namespace SimpleBankSystem.Repository.Implementation
                 return new SaveResultModel
                 {
                     IsSuccessful = false,
-                    Message = "A concurrency occurred. Please refresh page and do the transaction again."
+                    Message = RepoCons.Message.ConcurrencyOccured
                 };
             }
         }

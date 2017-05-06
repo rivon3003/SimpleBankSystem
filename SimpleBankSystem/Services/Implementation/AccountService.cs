@@ -210,7 +210,7 @@ namespace SimpleBankSystem.Services.Implementation
                     return new TransactionResponseModel
                     {
                         IsSuccessful = false,
-                        Message = "The account is not found"
+                        Message = Message.AccountNotFound
                     };
 
                 }
