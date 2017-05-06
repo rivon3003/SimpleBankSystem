@@ -14,7 +14,9 @@ namespace SimpleBankSystem.Services.Infrastructure
         bool IsAccNumExisted(string accNum);
         bool IsValidAccount(LoginViewModel model);
         DetailViewModel GetAccountDetail(string accNum);
+        Task<DetailViewModel> GetAccountDetailAsync(string accNum);
         TransactionResponseModel Deposit(DepositViewModel model);
+        Task<TransactionResponseModel> DepositAsync(DepositViewModel model);
         TransactionResponseModel Withdraw(WithdrawViewModel model);
         TransactionResponseModel Transfer(TransferViewModel model);
     }

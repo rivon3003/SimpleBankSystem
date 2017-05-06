@@ -12,6 +12,9 @@ using SimpleBankSystem.Extension;
 using SimpleBankSystem.Constants.TrackingData;
 using SimpleBankSystem.Constants.Value;
 using SimpleBankSystem.Models.ViewModel.Account;
+using System.Threading.Tasks;
+using SimpleBankSystem.Models.ResponseModel.Account;
+using SimpleBankSystem.Models.Result;
 
 namespace SimpleBankSystem.Repository.Implementation
 {
@@ -48,6 +51,28 @@ namespace SimpleBankSystem.Repository.Implementation
         {
             TrackDataRecords();
             dbContext.SaveChanges();
+        }
+
+        public async Task<SaveResultModel> SaveAsync()
+        {
+            TrackDataRecords();
+            try
+            {
+                await dbContext.SaveChangesAsync();
+                return new SaveResultModel
+                {
+                    IsSuccessful = true,
+                    Message = "Saved",
+                };
+            }
+            catch(DbUpdateConcurrencyException ex)
+            {
+                return new SaveResultModel
+                {
+                    IsSuccessful = false,
+                    Message = "A concurrency occurred. Please refresh page and do the transaction again."
+                };
+            }
         }
 
         protected virtual void Dispose(bool disposing)

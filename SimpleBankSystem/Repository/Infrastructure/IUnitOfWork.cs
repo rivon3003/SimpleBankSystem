@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SimpleBankSystem.Models.Result;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SimpleBankSystem.Repository.Infrastructure
@@ -10,6 +9,7 @@ namespace SimpleBankSystem.Repository.Infrastructure
     {
         IGenericRepository<TEntity> Repository<TEntity>() where TEntity : class;
         void Save();
+        Task<SaveResultModel> SaveAsync();
         DbContext GetContext();
     }
 }

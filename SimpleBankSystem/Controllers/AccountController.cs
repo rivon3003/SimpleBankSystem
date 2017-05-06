@@ -89,19 +89,19 @@ namespace SimpleBankSystem.Controllers
         }
 
         [LogInRequired]
-        public IActionResult Detail()
+        public async Task<IActionResult> Detail()
         {
             var curAccNum = HttpContext.Session.GetObjectFromJson<LoginViewModel>(SessionName.LoggedAccount).AccountNumber;
-            var model = _accSer.GetAccountDetail(curAccNum);
+            var model = await _accSer.GetAccountDetailAsync(curAccNum);
             return View(model);
         }
 
         [HttpPost]
         [LogInRequired]
-        public JsonResult Deposit([FromBody] DepositViewModel model)
+        public async Task<JsonResult> Deposit([FromBody] DepositViewModel model)
         {
             model.AccountNumber = HttpContext.Session.GetObjectFromJson<LoginViewModel>(SessionName.LoggedAccount).AccountNumber;
-            return Json(_accSer.Deposit(model));
+            return Json(_accSer.DepositAsync(model));
         }
 
         [HttpPost]

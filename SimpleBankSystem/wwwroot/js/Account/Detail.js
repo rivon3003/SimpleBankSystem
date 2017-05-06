@@ -10,12 +10,13 @@
         dataType: "JSON",
         success: function (response)
         {
-            if (response.isSuccessful)
+            if (response.result.isSuccessful)
             {
-                $("#balance").val(response.currentBalance);
+                $("#balance").val(response.result.currentBalance);
+                $("#rowVersion").val(response.result.rowVersion);
 
             }
-            alert(response.message);
+            alert(response.result.message);
         },
         fail: function (response)
         {

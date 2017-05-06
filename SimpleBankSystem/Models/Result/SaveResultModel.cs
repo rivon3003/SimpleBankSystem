@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SimpleBankSystem.Models.ResponseModel
+namespace SimpleBankSystem.Models.Result
 {
-    public class BaseResponseModel
+    public class SaveResultModel
     {
         public bool IsSuccessful { get; set; }
         public string Message { get; set; }
-        public string RowVersion { get; set; }
     }
 }
