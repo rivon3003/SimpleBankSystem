@@ -74,6 +74,14 @@ namespace SimpleBankSystem.Repository.Implementation
                     Message = RepoCons.Message.ConcurrencyOccured
                 };
             }
+            catch
+            {
+                return new SaveResultModel
+                {
+                    IsSuccessful = false,
+                    Message = RepoCons.Message.Unknown
+                };
+            }
         }
 
         protected virtual void Dispose(bool disposing)

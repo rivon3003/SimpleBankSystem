@@ -45,30 +45,6 @@ namespace SimpleBankSystem.Repository.Implementation
             //}
         }
 
-        public virtual async Task<IQueryable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IOrderedEnumerable<TEntity>> orderBy = null, string includeProperties = "")
-        {
-            IQueryable<TEntity> query = dbSet;
-
-            if (filter != null)
-            {
-                query = query.Where(filter);
-            }
-
-            foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                query = query.Include(includeProperty);
-            }
-
-            //if(orderBy != null)
-            //{
-            //    return orderBy(query);
-            //}
-            //else
-            //{
-            return query;
-            //}
-        }
-
         public virtual TEntity GetById(object id)
         {
             return dbSet.Find(id);

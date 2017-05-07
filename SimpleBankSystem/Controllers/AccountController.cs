@@ -106,18 +106,18 @@ namespace SimpleBankSystem.Controllers
 
         [HttpPost]
         [LogInRequired]
-        public JsonResult Withdraw([FromBody] WithdrawViewModel model)
+        public async Task<JsonResult> Withdraw([FromBody] WithdrawViewModel model)
         {
             model.AccountNumber = HttpContext.Session.GetObjectFromJson<LoginViewModel>(SessionName.LoggedAccount).AccountNumber;
-            return Json(_accSer.Withdraw(model));
+            return Json(_accSer.WithdrawAsync(model));
         }
 
         [HttpPost]
         [LogInRequired]
-        public JsonResult Transfer([FromBody] TransferViewModel model)
+        public async Task<JsonResult> Transfer([FromBody] TransferViewModel model)
         {
             model.AccountNumber = HttpContext.Session.GetObjectFromJson<LoginViewModel>(SessionName.LoggedAccount).AccountNumber;
-            return Json(_accSer.Transfer(model));
+            return Json(_accSer.TransferAsync(model));
         }
     }
 }

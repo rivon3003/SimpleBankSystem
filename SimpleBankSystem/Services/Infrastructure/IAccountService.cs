@@ -1,9 +1,5 @@
-﻿using SimpleBankSystem.Models.Entity;
-using SimpleBankSystem.Models.ResponseModel.Account;
+﻿using SimpleBankSystem.Models.ResponseModel.Account;
 using SimpleBankSystem.Models.ViewModel.Account;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SimpleBankSystem.Services.Infrastructure
@@ -18,6 +14,8 @@ namespace SimpleBankSystem.Services.Infrastructure
         TransactionResponseModel Deposit(DepositViewModel model);
         Task<TransactionResponseModel> DepositAsync(DepositViewModel model);
         TransactionResponseModel Withdraw(WithdrawViewModel model);
+        Task<TransactionResponseModel> WithdrawAsync(WithdrawViewModel model);
         TransactionResponseModel Transfer(TransferViewModel model);
+        Task<TransactionResponseModel> TransferAsync(TransferViewModel model);
     }
 }

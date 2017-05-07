@@ -1,22 +1,30 @@
-﻿function Deposit() {
+﻿function Success(response) {
+    if (response.result.isSuccessful) {
+        $("#balance").val(response.result.currentBalance);
+        $("#rowVersion").val(response.result.rowVersion);
+
+    }
+    alert(response.result.message);
+}
+
+function CreateDataObject(amountEleName)
+{
+    return {
+        Amount: $("#" + amountEleName).val(),
+        RowVersion: $("#rowVersion").val()
+    }
+}
+
+function Deposit() {
     $.ajax({
         method: "POST",
         contentType: "application/json",
         url: "/Account/Deposit",
-        data: JSON.stringify({
-            Amount: $("#depositAmount").val(),
-            RowVersion: $("#rowVersion").val()
-        }),
+        data: JSON.stringify(CreateDataObject("depositAmount")),
         dataType: "JSON",
         success: function (response)
         {
-            if (response.result.isSuccessful)
-            {
-                $("#balance").val(response.result.currentBalance);
-                $("#rowVersion").val(response.result.rowVersion);
-
-            }
-            alert(response.result.message);
+            Success(response);
         },
         fail: function (response)
         {
@@ -30,16 +38,10 @@ function Withdraw() {
         method: "POST",
         contentType: "application/json",
         url: "/Account/Withdraw",
-        data: JSON.stringify({
-            Amount: $("#withdrawAmount").val()
-        }),
+        data: JSON.stringify(CreateDataObject("withdrawAmount")),
         dataType: "JSON",
         success: function (response) {
-            if (response.isSuccessful) {
-                $("#balance").val(response.currentBalance);
-
-            }
-            alert(response.message);
+            Success(response);
         },
         fail: function (response) {
             alert(response);
@@ -48,25 +50,20 @@ function Withdraw() {
 }
 
 function Transfer() {
+    var data = CreateDataObject("transferAmount");
+    data.TargetAccountNumber = $("#targetAccountNumber").val();
+
     $.ajax({
         method: "POST",
         contentType: "application/json",
         url: "/Account/Transfer",
-        data: JSON.stringify({
-            Amount: $("#transferAmount").val(),
-            TargetAccountNumber: $("#targetAccountNumber").val()
-        }),
+        data: JSON.stringify(data),
         dataType: "JSON",
         success: function (response) {
-            if (response.isSuccessful) {
-                $("#balance").val(response.currentBalance);
-            }
-            alert(response.message);
+            Success(response);
         },
         fail: function (response) {
             alert(response);
         }
     });
 }
-
-//$("#btnDeposit").click(Deposit());

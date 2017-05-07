@@ -11,6 +11,7 @@ using System;
 using System.Linq;
 using AutoMapper;
 using System.Threading.Tasks;
+using SimpleBankSystem.Models.Result;
 
 namespace SimpleBankSystem.Services.Implementation
 {
@@ -130,6 +131,76 @@ namespace SimpleBankSystem.Services.Implementation
             return failureResponse;
         }
 
+        private async Task<TransactionResponseModel> WithdrawAsync(WithdrawViewModel model, IUnitOfWork unit)
+        {
+            var account = await unit.Repository<Account>().Get().SingleOrDefaultAsync(a => a.AccountNumber == model.AccountNumber);
+            var currentRowVerStr = Convert.ToBase64String(account.RowVersion);
+
+            var failureResponse = new TransactionResponseModel
+            {
+                IsSuccessful = false,
+                RowVersion = currentRowVerStr
+            };
+
+            var passRowVer = Convert.FromBase64String(model.RowVersion);
+            var prop = unit.GetContext().Entry(account).Property(a => a.RowVersion);
+            prop.CurrentValue = passRowVer;
+            prop.OriginalValue = passRowVer;
+
+            if (account != null)
+            {
+                if (account.Balance >= model.Amount)
+                {
+                    account.Balance -= model.Amount;
+                    var entity = unit.Repository<Account>().Attach(account);
+                    unit.GetContext().Entry(account).State = EntityState.Modified;
+
+                    return new TransactionResponseModel
+                    {
+                        IsSuccessful = true,
+                        CurrentBalance = entity.Balance,
+                        Message = Message.SuccessfulTracsaction
+                    };
+                }
+                failureResponse.Message = Message.BalanceIsNotEnough;
+                return failureResponse;
+            }
+
+            failureResponse.Message = Message.AccountIsInvalid;
+            return failureResponse;
+        }
+
+        private TransactionResponseModel HandleSaving(SaveResultModel saveResult, TransactionResponseModel result, IUnitOfWork unit, string accountNumber )
+        {
+            if (saveResult.IsSuccessful)
+            {
+                var account = unit.Repository<Account>().Get().SingleOrDefault(a => a.AccountNumber == accountNumber);
+
+                if (account != null)
+                {
+                    return new TransactionResponseModel
+                    {
+                        IsSuccessful = saveResult.IsSuccessful,
+                        Message = saveResult.Message,
+                        CurrentBalance = result.CurrentBalance,
+                        RowVersion = Convert.ToBase64String(account.RowVersion)
+                    };
+                }
+
+                return new TransactionResponseModel
+                {
+                    IsSuccessful = false,
+                    Message = Message.AccountNotFound
+                };
+
+            }
+            return new TransactionResponseModel
+            {
+                IsSuccessful = saveResult.IsSuccessful,
+                Message = saveResult.Message,
+                RowVersion = result.RowVersion
+            };
+        }
         #endregion Private method
         public void CreateAccount(RegisterViewModel registerVm)
         {
@@ -170,7 +241,7 @@ namespace SimpleBankSystem.Services.Implementation
         {
             using (var unit = _unitOfWorkFactory.Create())
             {
-                var data = unit.Repository<Account>().Get().FirstOrDefault(a => a.AccountNumber == accNum);
+                var data = await unit.Repository<Account>().Get().SingleOrDefaultAsync(a => a.AccountNumber == accNum);
                 return _mapper.Map<Account, DetailViewModel>(data);
             }
         }
@@ -192,34 +263,7 @@ namespace SimpleBankSystem.Services.Implementation
             {
                 var result = await DepositAsync(model, unit);
                 var saveResult = unit.SaveAsync().Result;
-                if (saveResult.IsSuccessful)
-                {
-                    var account = unit.Repository<Account>().Get().SingleOrDefault(a => a.AccountNumber == model.AccountNumber);
-
-                    if(account != null)
-                    {
-                        return new TransactionResponseModel
-                        {
-                            IsSuccessful = saveResult.IsSuccessful,
-                            Message = saveResult.Message,
-                            CurrentBalance = result.CurrentBalance,
-                            RowVersion = Convert.ToBase64String(account.RowVersion)
-                        };
-                    }
-
-                    return new TransactionResponseModel
-                    {
-                        IsSuccessful = false,
-                        Message = Message.AccountNotFound
-                    };
-
-                }
-                return new TransactionResponseModel
-                {
-                    IsSuccessful = saveResult.IsSuccessful,
-                    Message = saveResult.Message,
-                    RowVersion = result.RowVersion
-                };
+                return HandleSaving(saveResult, result, unit, model.AccountNumber);
             }
         }
 
@@ -230,6 +274,16 @@ namespace SimpleBankSystem.Services.Implementation
                 var result = Withdraw(model, unit);
                 unit.Save();
                 return result;
+            }
+        }
+
+        public async Task<TransactionResponseModel> WithdrawAsync(WithdrawViewModel model)
+        {
+            using (var unit = _unitOfWorkFactory.Create())
+            {
+                var result = await WithdrawAsync(model, unit);
+                var saveResult = unit.SaveAsync().Result;
+                return HandleSaving(saveResult, result, unit, model.AccountNumber);
             }
         }
 
@@ -289,6 +343,83 @@ namespace SimpleBankSystem.Services.Implementation
                         {
                             IsSuccessful = false,
                             Message = ex.InnerException.ToString()
+                        };
+                    }
+                }
+            }
+            else
+            {
+                return new TransactionResponseModel
+                {
+                    IsSuccessful = false,
+                    Message = Message.RedundantTransaction
+                };
+            }
+        }
+
+        public async Task<TransactionResponseModel> TransferAsync(TransferViewModel model)
+        {
+            if (model.AccountNumber != model.TargetAccountNumber)
+            {
+                using (var unit = _unitOfWorkFactory.Create())
+                {
+                    var targetAccount = await unit.Repository<Account>().Get().SingleOrDefaultAsync(a => a.AccountNumber == model.TargetAccountNumber);
+
+                    if(targetAccount != null)
+                    {
+                        var withdrawModel = new WithdrawViewModel
+                        {
+                            AccountNumber = model.AccountNumber,
+                            Amount = model.Amount,
+                            RowVersion = model.RowVersion
+                        };
+
+                        var depositModel = new DepositViewModel
+                        {
+                            AccountNumber = model.TargetAccountNumber,
+                            Amount = model.Amount,
+                            RowVersion = Convert.ToBase64String(targetAccount.RowVersion)
+                        };
+
+                        try
+                        {
+                            var withdrawResult = await WithdrawAsync(withdrawModel, unit);
+                            if (withdrawResult.IsSuccessful)
+                            {
+                                var depositResult = await DepositAsync(depositModel, unit);
+                                if (depositResult.IsSuccessful)
+                                {
+                                    var saveResult = unit.SaveAsync().Result;
+                                    return HandleSaving(saveResult, withdrawResult, unit, model.AccountNumber);
+                                }
+
+                                return new TransactionResponseModel
+                                {
+                                    IsSuccessful = false,
+                                    Message = depositResult.Message
+                                };
+                            }
+                            return new TransactionResponseModel
+                            {
+                                IsSuccessful = false,
+                                Message = withdrawResult.Message
+                            };
+                        }
+                        catch (Exception ex)
+                        {
+                            return new TransactionResponseModel
+                            {
+                                IsSuccessful = false,
+                                Message = ex.InnerException.ToString()
+                            };
+                        }
+                    }
+                    else
+                    {
+                        return new TransactionResponseModel
+                        {
+                            IsSuccessful = false,
+                            Message = Message.TargetNotExisted
                         };
                     }
                 }

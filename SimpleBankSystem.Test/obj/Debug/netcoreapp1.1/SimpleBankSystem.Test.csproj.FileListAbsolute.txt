@@ -1,0 +1,14 @@
+C:\Users\RivonNguyen\Documents\Visual Studio 2017\Projects\SimpleBankSystem\SimpleBankSystem.Test\bin\Debug\netcoreapp1.1\xunit.runner.visualstudio.dotnetcore.testadapter.dll
+C:\Users\RivonNguyen\Documents\Visual Studio 2017\Projects\SimpleBankSystem\SimpleBankSystem.Test\bin\Debug\netcoreapp1.1\xunit.runner.utility.netstandard15.dll
+C:\Users\RivonNguyen\Documents\Visual Studio 2017\Projects\SimpleBankSystem\SimpleBankSystem.Test\bin\Debug\netcoreapp1.1\xunit.runner.reporters.netstandard15.dll
+C:\Users\RivonNguyen\Documents\Visual Studio 2017\Projects\SimpleBankSystem\SimpleBankSystem.Test\bin\Debug\netcoreapp1.1\SimpleBankSystem.Test.deps.json
+C:\Users\RivonNguyen\Documents\Visual Studio 2017\Projects\SimpleBankSystem\SimpleBankSystem.Test\bin\Debug\netcoreapp1.1\SimpleBankSystem.Test.runtimeconfig.json
+C:\Users\RivonNguyen\Documents\Visual Studio 2017\Projects\SimpleBankSystem\SimpleBankSystem.Test\bin\Debug\netcoreapp1.1\SimpleBankSystem.Test.runtimeconfig.dev.json
+C:\Users\RivonNguyen\Documents\Visual Studio 2017\Projects\SimpleBankSystem\SimpleBankSystem.Test\bin\Debug\netcoreapp1.1\SimpleBankSystem.Test.dll
+C:\Users\RivonNguyen\Documents\Visual Studio 2017\Projects\SimpleBankSystem\SimpleBankSystem.Test\bin\Debug\netcoreapp1.1\SimpleBankSystem.Test.pdb
+C:\Users\RivonNguyen\Documents\Visual Studio 2017\Projects\SimpleBankSystem\SimpleBankSystem.Test\bin\Debug\netcoreapp1.1\SimpleBankSystem.dll
+C:\Users\RivonNguyen\Documents\Visual Studio 2017\Projects\SimpleBankSystem\SimpleBankSystem.Test\bin\Debug\netcoreapp1.1\SimpleBankSystem.pdb
+C:\Users\RivonNguyen\Documents\Visual Studio 2017\Projects\SimpleBankSystem\SimpleBankSystem.Test\obj\Debug\netcoreapp1.1\SimpleBankSystem.Test.csprojResolveAssemblyReference.cache
+C:\Users\RivonNguyen\Documents\Visual Studio 2017\Projects\SimpleBankSystem\SimpleBankSystem.Test\obj\Debug\netcoreapp1.1\SimpleBankSystem.Test.AssemblyInfo.cs
+C:\Users\RivonNguyen\Documents\Visual Studio 2017\Projects\SimpleBankSystem\SimpleBankSystem.Test\obj\Debug\netcoreapp1.1\SimpleBankSystem.Test.dll
+C:\Users\RivonNguyen\Documents\Visual Studio 2017\Projects\SimpleBankSystem\SimpleBankSystem.Test\obj\Debug\netcoreapp1.1\SimpleBankSystem.Test.pdb
