@@ -45,6 +45,12 @@ namespace SimpleBankSystem.Repository.Implementation
             //}
         }
 
+        public virtual IQueryable<TEntity> Get()
+        {
+            IQueryable<TEntity> query = dbSet;
+            return query;
+        }
+
         public virtual TEntity GetById(object id)
         {
             return dbSet.Find(id);

@@ -12,6 +12,8 @@ namespace SimpleBankSystem.Repository.Infrastructure
     public interface IGenericRepository<TEntity> : IGenericRepository where TEntity : class
     {
             IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IOrderedEnumerable<TEntity>> orderBy = null, string includeProperties = "");
+            // Only for Unit Test
+            IQueryable<TEntity> Get();
             TEntity Insert(TEntity entity);
             TEntity GetById(object id);
             void DeleteById(object id);

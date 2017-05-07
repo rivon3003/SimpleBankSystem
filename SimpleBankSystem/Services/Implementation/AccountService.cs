@@ -62,7 +62,8 @@ namespace SimpleBankSystem.Services.Implementation
             return failureResponse;
         }
 
-        private async Task<TransactionResponseModel> DepositAsync(DepositViewModel model, IUnitOfWork unit)
+        //TODO: Change to private when done unit test
+        public async Task<TransactionResponseModel> DepositAsync(DepositViewModel model, IUnitOfWork unit)
         {
             var account = await unit.Repository<Account>().Get().SingleOrDefaultAsync(a => a.AccountNumber == model.AccountNumber);
             var currentRowVerStr = Convert.ToBase64String(account.RowVersion);
@@ -131,7 +132,8 @@ namespace SimpleBankSystem.Services.Implementation
             return failureResponse;
         }
 
-        private async Task<TransactionResponseModel> WithdrawAsync(WithdrawViewModel model, IUnitOfWork unit)
+        //TODO: Change to private when done unit test
+        public async Task<TransactionResponseModel> WithdrawAsync(WithdrawViewModel model, IUnitOfWork unit)
         {
             var account = await unit.Repository<Account>().Get().SingleOrDefaultAsync(a => a.AccountNumber == model.AccountNumber);
             var currentRowVerStr = Convert.ToBase64String(account.RowVersion);
